@@ -76,17 +76,16 @@ resource "aws_route_table_association" "main_association" {
 
 resource "aws_security_group" "main_sg" {
   name        = "${var.projeto}-${var.candidato}-sg"
-  description = "Permitir SSH de qualquer lugar e todo o tráfego de saída"
+  description = "Permitir SSH de IPs específicos e todo o tráfego de saída"
   vpc_id      = aws_vpc.main_vpc.id
 
   # Regras de entrada
   ingress {
-    description      = "Allow SSH from anywhere"
+    description      = "Allow SSH from specific IP"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    cidr_blocks      = ["203.0.113.0/32"]  # Substituir com IP ou faixa e IP's confiáveis
   }
 
   # Regras de saída
@@ -96,7 +95,6 @@ resource "aws_security_group" "main_sg" {
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
 
   tags = {
