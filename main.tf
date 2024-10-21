@@ -143,6 +143,18 @@ resource "aws_instance" "debian_ec2" {
     Name = "${var.projeto}-${var.candidato}-ec2"
   }
 }
+resource "aws_flow_log" "vpc_flow_logs" {
+  vpc_id = aws_vpc.main_vpc.id
+  log_destination_type = "cloud-watch-logs"
+
+  traffic_type = "ALL"
+
+  log_group_name = "/aws/vpc/flow-logs/${var.projeto}-${var.candidato}"
+
+  tags = {
+    Name = "${var.projeto}-${var.candidato}-vpc-flow-log"
+  }
+}
 
 output "private_key" {
   description = "Chave privada para acessar a instância EC2"
