@@ -156,6 +156,33 @@ resource "aws_flow_log" "vpc_flow_logs" {
   }
 }
 
+resource "aws_instance" "debian_ec2" {
+  ami             = data.aws_ami.debian12.id
+  instance_type   = "t2.micro"
+  subnet_id       = aws_subnet.main_subnet.id
+  key_name        = aws_key_pair.ec2_key_pair.key_name
+  security_groups = [aws_security_group.main_sg.name]
+
+  associate_public_ip_address = true
+
+  root_block_device {
+    volume_size           = 20
+    volume_type           = "gp2"
+    delete_on_termination = true
+    encrypted             = true  # Criptografia ativada
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get upgrade -y
+              EOF
+
+  tags = {
+    Name = "${var.projeto}-${var.candidato}-ec2"
+  }
+}
+
 output "private_key" {
   description = "Chave privada para acessar a instância EC2"
   value       = tls_private_key.ec2_key.private_key_pem
