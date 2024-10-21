@@ -126,11 +126,13 @@ resource "aws_instance" "debian_ec2" {
   security_groups = [aws_security_group.main_sg.name]
 
   associate_public_ip_address = true
+  monitoring          = true  # Habilitar monitoramento detalhado
 
   root_block_device {
     volume_size           = 20
     volume_type           = "gp2"
     delete_on_termination = true
+    encrypted             = true
   }
 
   user_data = <<-EOF
