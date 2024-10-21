@@ -139,8 +139,11 @@ resource "aws_instance" "debian_ec2" {
               #!/bin/bash
               apt-get update -y
               apt-get upgrade -y
+              apt-get install nginx -y
+              systemctl start nginx
+              systemctl enable nginx
               EOF
-
+              
   tags = {
     Name = "${var.projeto}-${var.candidato}-ec2"
   }
